@@ -1,9 +1,19 @@
 import express from "express";
 import path from "path";
+import cors from "cors";
 
 import { ENV } from "./lib/env.js";
 
 const app = express();
+
+app.use(cors({
+    // origin: [
+    //   "http://localhost:5173",              // local frontend
+    //   "https://your-frontend.vercel.app"    // deployed frontend
+    // ],
+    origin: true,
+    credentials: true
+  }));
 
 const __dirname = path.resolve();
 
