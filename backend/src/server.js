@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+import { connectDB } from "./lib/db.js";
 
 import { ENV } from "./lib/env.js";
 
@@ -31,6 +32,17 @@ if (ENV.NODE_ENV === "production") {
         res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
     });
 }
-app.listen(ENV.PORT, () => {
-    console.log("Server is running on port", ENV.PORT);
-});
+
+
+const startServer=async()=>{
+    try {
+        await connectDB();
+        app.listen(ENV.PORT, () => {
+            console.log("Server is running on port", ENV.PORT);
+        });
+    } catch (error) {
+        console.error("Error connecting to MongoDB", error);
+        process.exit(1);
+    }
+}
+startServer();
