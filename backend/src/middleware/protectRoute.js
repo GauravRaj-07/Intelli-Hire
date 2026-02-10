@@ -3,16 +3,16 @@ import { User } from "../models/User.js";
 
 export const protectRoute=[
     requireAuth(),
-    async (req,resizeBy,next)=>{
+    async (req,res,next)=>{
         try{
             const clerkId=req.auth().userId
 
-            if (!clerkId) return resizeBy.status(401).json({msg:"Unauthorized - Invalid token"})
+            if (!clerkId) return res.status(401).json({msg:"Unauthorized - Invalid token"})
 
             // find user in db by clerk ID
             const user=await User.findOne({clerkId})
 
-            if (!user) return resizeBy.status(404).json({msg:"User not found"})
+            if (!user) return res.status(404).json({msg:"User not found"})
 
             // attach user to req
             req.user=user
