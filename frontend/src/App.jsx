@@ -5,12 +5,12 @@ import { SignedOut, SignedIn, SignInButton, SignOutButton, UserButton } from '@c
 
 function App() {
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/health`)
-      .then(res => res.json())
-      .then(data => console.log("Backend says:", data))
-      .catch(err => console.error("Backend error:", err));
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${import.meta.env.VITE_API_URL}/health`)
+  //     .then(res => res.json())
+  //     .then(data => console.log("Backend says:", data))
+  //     .catch(err => console.error("Backend error:", err));
+  // }, []);
   
 
   return (
