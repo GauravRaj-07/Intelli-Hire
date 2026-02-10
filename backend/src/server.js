@@ -3,9 +3,12 @@ import path from "path";
 import cors from "cors";
 import { connectDB } from "./lib/db.js";
 import {serve} from "inngest/express"
+import {clerkMiddleware} from "@clerk/express"
 
 import { ENV } from "./lib/env.js";
 import { inngest,functions } from "./lib/inngest.js";
+import { protectRoute } from "./middleware/protectRoute.js";
+import chatRoutes from "./routes/chatRoutes.js"
 
 const app = express();
 
@@ -16,17 +19,21 @@ app.use(cors({
     origin: ENV.CLIENT_URL,
     credentials: true
 }));
+app.use(clerkMiddleware()) // this adds auth field to request object: req.auth()
 
 app.use("/api/inngest",serve({client:inngest,functions}))
+app.use("/api/chat",chatRoutes)
 
 const __dirname = path.resolve();
 
 app.get("/health", (req, res) => {
     res.status(200).json({ message: "API is up and running" });
 });
-app.get("/books", (req, res) => {
-    res.status(200).json({ message: "This is the books endpoint" });
-});
+
+// when you pass an array of middleware to express, it automatically flattens and executes them sequentially, one by one
+// app.get("/video-calls",protectRoute, (req, res) => {
+//     res.status(200).json({ message: "This is the protected video-call endpoint" });
+// });
 
 // make ready for deployment
 if (ENV.NODE_ENV === "production") {
