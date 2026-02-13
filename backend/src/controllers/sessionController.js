@@ -26,7 +26,7 @@ export async function createSession(req,res){
         })
 
         // chat messaging
-        const channel=chatClient.channel("messsaging",callId,{
+        const channel=chatClient.channel("messaging",callId,{
             name:`${problem} Session`,
             created_by_id:clerkId,
             members:[clerkId]
@@ -101,8 +101,16 @@ export async function joinSession(req,res){
 
         if(!session) return res.status(404).json({msg:"Session not found"})
 
+        if (session.status!=="active"){
+            return res.status(400).json({msg:"Cannot join a completed session"})
+        }
+
+        if(session.host.toString()===userId.toString()){
+            return res.status(400).json({msg:"Host cannot join their own session as participant"})
+        }
+
         // check if session is already full - has a participant
-        if(session.participant) return res.status(404).json({mas:"Session is full"})
+        if(session.participant) return res.status(409).json({msg:"Session is full"})
 
         session.participant=userId
         await session.save()
@@ -125,7 +133,7 @@ export async function endSession(req,res){
 
         const session=await Session.findById(id)
 
-        if(!session) res.status(404).json({msg:"Session not found"})
+        if(!session) return res.status(404).json({msg:"Session not found"})
 
         // check if user is the host
         if(session.host.toString() !=userId.toString()){
@@ -137,9 +145,6 @@ export async function endSession(req,res){
             return res.status(400).json({msg:"Session is already completed"})
         }
 
-        session.status="completed"
-        await session.save()
-
         // delete stream video call
         const call=streamClient.video.call("default",session.callId)
         await call.delete({hard:true})
@@ -147,6 +152,9 @@ export async function endSession(req,res){
         // delete stream chat channel
         const channel=chatClient.channel("messaging",session.callId)
         await channel.delete()
+
+        session.status="completed"
+        await session.save()
 
         res.status(200).json({session,msg:"Session ended successfully"})
     } catch (error) {
