@@ -1,31 +1,22 @@
-
 import { useEffect } from 'react';
-import './App.css'
-import { SignedOut, SignedIn, SignInButton, SignOutButton, UserButton } from '@clerk/clerk-react'
+import { SignedOut, SignedIn, SignInButton, SignOutButton, UserButton, useUser } from '@clerk/clerk-react'
+import { Navigate, Route, Routes } from 'react-router';
+import HomePage from './pages/HomePage';
+import ProblemsPage from './pages/ProblemsPage';
+import {Toaster} from "react-hot-toast"
 
 function App() {
-
-  // useEffect(() => {
-  //   fetch(`${import.meta.env.VITE_API_URL}/health`)
-  //     .then(res => res.json())
-  //     .then(data => console.log("Backend says:", data))
-  //     .catch(err => console.error("Backend error:", err));
-  // }, []);
   
+  const {isSignedIn}=useUser()
 
   return (
     <>
-      <h1>Welcome to IntelliHire</h1>
+    <Routes>
+      <Route path="/" element={<HomePage/>}/>
+      <Route path="/problems" element={isSignedIn ? <ProblemsPage/> : <Navigate to={"/"}/>}/>
+    </Routes>
 
-      <SignedOut>
-        <SignInButton mode="modal">
-          <button>Login</button>
-        </SignInButton>
-      </SignedOut>
-      <SignedIn>
-        <SignOutButton></SignOutButton>
-      </SignedIn>
-      <UserButton />
+    <Toaster toastOptions={{duration:3000}}/>
     </>
   );
 }
