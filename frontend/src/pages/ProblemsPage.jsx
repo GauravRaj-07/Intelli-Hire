@@ -10,7 +10,7 @@ function ProblemsPage() {
 
   const easyProblemsCount=problems.filter(problem=>problem.difficulty==="Easy").length
   const mediumProblemsCount=problems.filter(problem=>problem.difficulty==="Medium").length
-  const hardProblemsCount=problems.filter(problem=>problem.difficulty==="HArd").length
+  const hardProblemsCount=problems.filter(problem=>problem.difficulty==="Hard").length
 
   return (
     <div className='min-h-screen bg-base-200'>
