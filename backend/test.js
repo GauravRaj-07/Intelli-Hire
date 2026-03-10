@@ -1,32 +1,45 @@
-import { StreamChat } from "stream-chat"
-// import dotenv from "dotenv"
-import { ENV } from "./src/lib/env.js"
+// import { StreamChat } from "stream-chat"
+// // import dotenv from "dotenv"
+// import { ENV } from "./src/lib/env.js"
 
-// dotenv.config()
+// // dotenv.config()
 
-const apiKey = ENV.STREAM_API_KEY
-const apiSecret = ENV.STREAM_API_SECRET
+// const apiKey = ENV.STREAM_API_KEY
+// const apiSecret = ENV.STREAM_API_SECRET
 
-if (!apiKey || !apiSecret) {
-  console.error("❌ Stream env vars missing")
-  process.exit(1)
-}
+// if (!apiKey || !apiSecret) {
+//   console.error("❌ Stream env vars missing")
+//   process.exit(1)
+// }
 
-const client = StreamChat.getInstance(apiKey, apiSecret)
+// const client = StreamChat.getInstance(apiKey, apiSecret)
 
-async function test() {
-  try {
-    await client.upsertUser({
-      id: "debug-user-1",
-      name: "Debug User",
-    })
+// async function test() {
+//   try {
+//     await client.upsertUser({
+//       id: "debug-user-1",
+//       name: "Debug User",
+//     })
 
-    console.log("✅ Stream user created successfully")
-    process.exit(0)
-  } catch (err) {
-    console.error("❌ Stream error:", err)
-    process.exit(1)
-  }
-}
+//     console.log("✅ Stream user created successfully")
+//     process.exit(0)
+//   } catch (err) {
+//     console.error("❌ Stream error:", err)
+//     process.exit(1)
+//   }
+// }
 
-test()
+// test()
+
+fetch("https://ce.judge0.com/submissions?base64_encoded=false&wait=true", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    source_code: "print('Hello world')",
+    language_id: 71
+  })
+})
+.then(res => res.json())
+.then(data => console.log(data.stdout));

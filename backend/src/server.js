@@ -32,6 +32,7 @@ app.get("/health", (req, res) => {
     res.status(200).json({ message: "API is up and running" });
 });
 
+
 // when you pass an array of middleware to express, it automatically flattens and executes them sequentially, one by one
 // app.get("/video-calls",protectRoute, (req, res) => {
 //     res.status(200).json({ message: "This is the protected video-call endpoint" });
