@@ -119,7 +119,7 @@ function ProblemPage() {
           <ProblemDescription problem={currentProblem} currentProblemId={currentProblemId} onProblemChange={handleProblemChange} allProblems={Object.values(PROBLEMS)}/>
           </Panel>
 
-          <PanelResizeHandle className='w-2 bg-base-200 hover:bg-primary transtion-colors cursor-col-resize'/>
+          <PanelResizeHandle className='w-2 bg-base-200 hover:bg-primary transition-colors cursor-col-resize'/>
 
           {/* right panel - the code editor and output */}
           <Panel defaultSize={60} minSize={30}>
