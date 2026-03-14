@@ -34,10 +34,15 @@ export async function createSession(req,res){
 
         await channel.create()
 
-        res.status(201).json({msg:session})
+        res.status(201).json({session,message:"Session created successfully"})
     }catch(error){
         console.log("Error in createSession controller:",error.message)
-        res.status(500).json({msg:"Internal Server Error"})
+
+        if (error?.name === "ValidationError") {
+            return res.status(400).json({message:error.message})
+        }
+
+        res.status(500).json({message:"Internal Server Error"})
     }
 }
 
@@ -45,6 +50,7 @@ export async function getActiveSessions(_,res){
     try {
         const sessions=await Session.find({status:"active"})
         .populate("host","name profileImage email clerkId")
+        .populate("participant","name profileImage email clerkId")
         .sort({createdAt:-1})
         .limit(20)
 
