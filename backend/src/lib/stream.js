@@ -1,29 +1,47 @@
-import {StreamChat} from "stream-chat"
-import {StreamClient} from "@stream-io/node-sdk"
-import {ENV} from "./env.js"
+import { StreamChat } from "stream-chat";
+import { StreamClient } from "@stream-io/node-sdk";
+import { ENV } from "./env.js";
 
-const apiKey=ENV.STREAM_API_KEY
-const apiSecret=ENV.STREAM_API_SECRET
+let _streamClient = null;
+let _chatClient = null;
 
-if(!apiKey || !apiSecret){
-    throw new Error("STREAM_API_KEY or STREAM_API_SECRET is missing")
+function getStreamKeys() {
+  const apiKey = ENV.STREAM_API_KEY;
+  const apiSecret = ENV.STREAM_API_SECRET;
+
+  if (!apiKey || !apiSecret) {
+    throw new Error("STREAM_API_KEY or STREAM_API_SECRET is missing");
+  }
+
+  return { apiKey, apiSecret };
 }
 
-export const streamClient=new StreamClient(apiKey,apiSecret) // will be uswd for video calls
-export const chatClient=StreamChat.getInstance(apiKey,apiSecret) // this is for chat messaging
+export function getStreamClient() {
+  if (_streamClient) return _streamClient;
+  const { apiKey, apiSecret } = getStreamKeys();
+  _streamClient = new StreamClient(apiKey, apiSecret);
+  return _streamClient;
+}
 
-export const upsertStreamUser=async (userData)=>{
+export function getChatClient() {
+  if (_chatClient) return _chatClient;
+  const { apiKey, apiSecret } = getStreamKeys();
+  _chatClient = StreamChat.getInstance(apiKey, apiSecret);
+  return _chatClient;
+}
+
+export const upsertStreamUser = async (userData) => {
     try{
-        await chatClient.upsertUser(userData)
+        await getChatClient().upsertUser(userData)
         console.log("Stream user upserted successfully:",userData)
     }catch(error){
         console.error("Error upserting Stream user:",error)
         throw error
     }
 }
-export const deleteStreamUser=async (userId)=>{
+export const deleteStreamUser = async (userId) => {
     try{
-        await chatClient.deleteUser(userId)
+        await getChatClient().deleteUser(userId)
         console.log("Stream user deleted successfully:",userId)
     }catch(error){
         console.error("Error deleting Stream user:",error)
