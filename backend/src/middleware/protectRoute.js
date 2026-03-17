@@ -20,7 +20,7 @@ export const protectRoute=[
             next()
         }catch(error){
             console.error("Error in protectRoute middleware",error)
-            resizeBy.status(500).json({msg:"Internal server Error"})
+            res.status(500).json({msg:"Internal server Error"})
         }
     }
 ]
