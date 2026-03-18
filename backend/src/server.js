@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import cors from "cors";
 import { connectDB } from "./lib/db.js";
 import {serve} from "inngest/express"
@@ -26,7 +25,6 @@ app.use("/api/inngest",serve({client:inngest,functions}))
 app.use("/api/chat",chatRoutes)
 app.use("/api/sessions",sessionRoutes)
 
-const __dirname = path.resolve();
 
 app.get("/health", (req, res) => {
     res.status(200).json({ message: "API is up and running" });
@@ -38,13 +36,7 @@ app.get("/health", (req, res) => {
 //     res.status(200).json({ message: "This is the protected video-call endpoint" });
 // });
 
-// make ready for deployment
-if (ENV.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
-    app.get("/{*any}", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
-    });
-}
+// Note: Frontend is deployed separately on Vercel, so no static file serving needed here
 
 
 const startServer=async()=>{
