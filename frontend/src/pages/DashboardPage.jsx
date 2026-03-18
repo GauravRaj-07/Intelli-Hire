@@ -50,6 +50,7 @@ function DashboardPage() {
     <>
     <div className='min-h-screen bg-base-300'>
       <Navbar/>
+      <div className="text-center py-2 text-xs opacity-50">v1.0 - Deployment Test</div>
       <WelcomeSection onCreateSession={()=>setShowCreateModal(true)}/>
 
         {/* Grid layout */}
