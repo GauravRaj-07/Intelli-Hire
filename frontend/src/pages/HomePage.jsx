@@ -1,6 +1,7 @@
 import { Link } from "react-router"
 import {ArrowRightIcon, CheckIcon, Code2Icon, SparklesIcon, UsersIcon, VideoIcon, ZapIcon} from 'lucide-react'
 import {SignInButton} from '@clerk/clerk-react'
+import Footer from "../components/Footer"
 
 function HomePage() {
   
@@ -138,7 +139,7 @@ function HomePage() {
         </div>
 
         {/* feature section */}
-        <div className="max-w-7xl mx-auto px-4 py-7.5">
+        <div className="max-w-7xl mx-auto px-4 py-7.5 mt-12">
             <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Everything You Need to
                 <span className="text-primary font-mono"> Succeed</span>
@@ -193,6 +194,9 @@ function HomePage() {
                 </div>
             </div>
         </div>
+
+        {/* footer */}
+        <Footer/>
         
     </div>
   )
