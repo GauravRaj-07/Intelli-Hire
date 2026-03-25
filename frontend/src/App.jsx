@@ -6,6 +6,10 @@ import HomePage from './pages/HomePage';
 import ProblemPage from './pages/ProblemPage';
 import ProblemsPage from './pages/ProblemsPage';
 import SessionPage from './pages/SessionPage';
+import ResumeBuilder from './pages/ResumeBuilder';
+import Preview from './pages/Preview';
+import Layout from './pages/Layout';
+import ResumeDashboard from './pages/ResumeDashboard';
 
 function App() {
   
@@ -22,6 +26,12 @@ function App() {
       <Route path="/problems" element={isSignedIn ? <ProblemsPage/> : <Navigate to={"/"}/>}/>
       <Route path="/problem/:id" element={isSignedIn ? <ProblemPage/> : <Navigate to={"/"}/>}/>
       <Route path="/session/:id" element={isSignedIn ? <SessionPage/> : <Navigate to={"/"}/>}/>
+      <Route path='app' element={isSignedIn ? <Layout/> : <Navigate to={"/"}/>}>
+        <Route index element={<ResumeDashboard/>}/>
+        <Route path="builder/:resumeId" element={<ResumeBuilder/>}/>
+      </Route>
+      
+      <Route path="view/:resumeId" element={isSignedIn ? <Preview/> : <Navigate to={"/"}/>}/>
     </Routes>
 
     <Toaster toastOptions={{duration:3000}}/>
