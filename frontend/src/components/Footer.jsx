@@ -1,4 +1,4 @@
-import { SparkleIcon } from 'lucide-react';
+import { SparklesIcon } from 'lucide-react';
 import React from 'react'
 import { Link } from 'react-router'
 
@@ -11,7 +11,7 @@ const Footer = () => {
             to={"/"}
             className='group flex items-center gap-3 hover:scale-105 transition-transform duration-200 mb-4'>
                 <div className='size-10 rounded-xl bg-linear-to-r from-primary via-secondary to-accent flex items-center justify-center shadow-lg'>
-                    <SparkleIcon className='size-6 text-white'/>
+                    <SparklesIcon className='size-6 text-white'/>
                 </div>
                 <div className="flex flex-col">
                 <span className="font-black text-xl bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent font-mono tracking-wide">

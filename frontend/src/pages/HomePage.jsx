@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import {ArrowRightIcon, CheckIcon, Code2Icon, SparklesIcon, UsersIcon, VideoIcon, ZapIcon} from 'lucide-react'
+import {ArrowRightIcon, CheckIcon, Code2Icon, CodeIcon, FileTextIcon, MessageCircleIcon, SparklesIcon, UsersIcon, VideoIcon, ZapIcon} from 'lucide-react'
 import {SignInButton} from '@clerk/clerk-react'
 import Footer from "../components/Footer"
 
@@ -98,6 +98,18 @@ function HomePage() {
                             <CheckIcon className="size-4 text-success"/>
                             Multi-Language
                         </div>
+                        <div className="badge badge-lg badge-outline">
+                            <CheckIcon className="size-4 text-success"/>
+                            Resume Builder
+                        </div>
+                        <div className="badge badge-lg badge-outline">
+                            <CheckIcon className="size-4 text-success"/>
+                            Coding Problems
+                        </div>
+                        <div className="badge badge-lg badge-outline">
+                            <CheckIcon className="size-4 text-success"/>
+                            Messaging
+                        </div>
 
                     </div>
 
@@ -188,6 +200,45 @@ function HomePage() {
                         <h3 className="card-title">Easy Collaboration</h3>
                         <p className="text-base-content/70">
                         Share your screen, discuss solutions, and learn from each other in real-time</p>
+
+                    </div>
+
+                </div>
+                {/* feature 4 */}
+                <div className="card bg-base-100 shadow-xl">
+                    <div className="card-body items-center text-center">
+                        <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+                        <CodeIcon className="size-8 text-primary"/>
+                        </div>
+                        <h3 className="card-title">Coding Problems</h3>
+                        <p className="text-base-content/70">
+                        Practice for your interviews with our curated list of coding problems</p>
+
+                    </div>
+
+                </div>
+                {/* feature 5 */}
+                <div className="card bg-base-100 shadow-xl">
+                    <div className="card-body items-center text-center">
+                        <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+                        <MessageCircleIcon className="size-8 text-primary"/>
+                        </div>
+                        <h3 className="card-title">Chat Messaging</h3>
+                        <p className="text-base-content/70">
+                        Chat with your interviewer in real-time to clarify requirements and discuss your approach</p>
+
+                    </div>
+
+                </div>
+                {/* feature 6 */}
+                <div className="card bg-base-100 shadow-xl">
+                    <div className="card-body items-center text-center">
+                        <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+                        <FileTextIcon className="size-8 text-primary"/>
+                        </div>
+                        <h3 className="card-title">Resume Builder</h3>
+                        <p className="text-base-content/70">
+                        Build your resume with our AI-powered resume builder and stand out to top employers effortlessly</p>
 
                     </div>
 
