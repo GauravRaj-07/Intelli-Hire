@@ -1,0 +1,29 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399"></stop>
+      <stop offset="100%" stop-color="#14B8A6"></stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg)"></rect>
+
+  <!-- Main Sparkle -->
+  <path d="
+    M128 54
+    C128 90, 156 118, 204 128
+    C156 138, 128 166, 128 202
+    C128 166, 100 138, 52 128
+    C100 118, 128 90, 128 54
+  " fill="none" stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- Small Plus (moved slightly down) -->
+  <path d="
+    M182 50 L182 90
+    M162 70 L202 70
+  " stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"></path>
+
+  <!-- Circle -->
+  <circle cx="74" cy="188" r="16" fill="none" stroke="#FFFFFF" stroke-width="10"></circle>
+</svg>
