@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { dummyResumeData } from '../data/assets'
-import { ArrowLeftIcon, ChevronLeft, ChevronRight, DownloadIcon, EyeIcon, EyeOffIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkles, User } from 'lucide-react'
+import { ArrowLeftIcon, ChevronLeft, ChevronRight, DownloadIcon, EyeIcon, EyeOffIcon, FileText, FolderIcon, GraduationCap, Share2Icon, Sparkles, User, LoaderCircleIcon } from 'lucide-react'
 import PersonalInfoForm from '../components/PersonalInfoForm'
 import ResumePreview from '../components/ResumePreview'
 import TemplateSelector from '../components/TemplateSelector'
@@ -11,6 +11,8 @@ import ExperienceForm from '../components/ExperienceForm'
 import EducationForm from '../components/EducationForm'
 import ProjectForm from '../components/ProjectForm'
 import { SkillsForm } from '../components/SkillsForm'
+import axiosInstance from '../lib/axios'
+import toast from 'react-hot-toast'
 
 const ResumeBuilder = () => {
 
@@ -25,16 +27,27 @@ const ResumeBuilder = () => {
         education:[],
         project:[],
         skills:[],
-        template:'classic',
+        templateId:'classic',
         accent_color:"#3B82F6",
         public:false
     })
 
     const loadExistingResume=async()=>{
-        const resume=dummyResumeData.find(resume=>resume._id===resumeId)
-        if(resume){
-            setResumeData(resume)
-            document.title=resume.title
+        // const resume=dummyResumeData.find(resume=>resume._id===resumeId)
+        // if(resume){
+        //     setResumeData(resume)
+        //     document.title=resume.title
+        // }
+
+        try {
+            const {data}=await axiosInstance.get('/resumes/get/'+resumeId)
+            if(data.resume){
+                setResumeData(data.resume)
+                document.title=data.resume.title
+            }
+        } catch (error) {
+            console.log(error.message);
+            
         }
     }
 
@@ -57,7 +70,18 @@ const ResumeBuilder = () => {
     },[])
 
     const changeResumeVisibility=async()=>{
-        setResumeData({...resumeData,public:!resumeData.public})
+        // setResumeData({...resumeData,public:!resumeData.public})
+        try {
+            const formData=new FormData()
+            formData.append("resumeId",resumeId)
+            formData.append("resumeData",JSON.stringify({public: !resumeData.public}))
+
+            const {data}=await axiosInstance.put('/resumes/update',formData)
+            setResumeData({...resumeData,public:!resumeData.public})
+            toast.success(data.message)
+        } catch (error) {
+            console.error("Error saving resume:",error)
+        }
     }
 
     const handleShare=()=>{
@@ -73,6 +97,36 @@ const ResumeBuilder = () => {
 
     const downloadResume=()=>{
         window.print()
+    }
+
+    const [isSaving, setIsSaving] = useState(false);
+
+    const saveResume=async()=>{
+        setIsSaving(true);
+        const toastId = toast.loading('Saving...');
+        try {
+            let updatedResumeData=structuredClone(resumeData)
+
+            // remove image from updatedResumeData
+            if(typeof resumeData.personal_info.image==='object'){
+                delete updatedResumeData.personal_info.image
+            }
+
+            const formData=new FormData()
+            formData.append("resumeId",resumeId)
+            formData.append("resumeData",JSON.stringify(updatedResumeData))
+            removeBackground && formData.append("removeBackground","yes")
+            typeof resumeData.personal_info.image==='object' && formData.append("image",resumeData.personal_info.image)
+
+            const {data}=await axiosInstance.put('/resumes/update',formData)
+            setResumeData(data.resume)
+            toast.success(data.message, { id: toastId })
+        } catch (error) {
+            console.error("Error saving resume:",error)
+            toast.error(error?.response?.data?.message || "Failed to save changes", { id: toastId })
+        } finally {
+            setIsSaving(false);
+        }
     }
 
   return (
@@ -97,7 +151,7 @@ const ResumeBuilder = () => {
 
                         {/* Section Navigation */}
                         <div className='flex justify-between items-center mb-6 border-b border-gray-300 pb-4'>
-                            <TemplateSelector selectedTemplate={resumeData.template} onChange={(template)=>setResumeData(prev=>({...prev,template}))}/>
+                            <TemplateSelector selectedTemplate={resumeData.templateId} onChange={(templateId)=>setResumeData(prev=>({...prev,templateId}))}/>
                             <ColorPicker selectedColor={resumeData.accent_color} onChange={(color)=>setResumeData(prev=>({...prev,accent_color:color}))}/>
                             <div className='flex items-center gap-2'>
                                 {activeSectionIndex !==0 && (
@@ -132,7 +186,10 @@ const ResumeBuilder = () => {
                                 <SkillsForm data={resumeData.skills} onChange={(data)=>setResumeData(prev=>({...prev,skills:data}))}/>
                             )}
                         </div>
-                        <button className='bg-linear-to-br from-green-100 to-gray-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm'>Save Changes</button>
+                        <button disabled={isSaving} onClick={saveResume} className='flex items-center justify-center gap-2 bg-linear-to-br from-green-100 to-gray-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm disabled:opacity-50'>
+                            {isSaving && <LoaderCircleIcon className='animate-spin size-4'/>}
+                            {isSaving ? 'Saving...' : 'Save Changes'}
+                        </button>
                     </div>
                  </div>
 
@@ -157,7 +214,7 @@ const ResumeBuilder = () => {
                     </div>
 
                     {/* resume Preview */}
-                    <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color}/>
+                    <ResumePreview data={resumeData} template={resumeData.templateId} accentColor={resumeData.accent_color}/>
                 </div>
             </div>
         </div>
