@@ -6,9 +6,11 @@ import {clerkMiddleware} from "@clerk/express"
 
 import { ENV } from "./lib/env.js";
 import { inngest,functions } from "./lib/inngest.js";
-import { protectRoute } from "./middleware/protectRoute.js";
 import chatRoutes from "./routes/chatRoutes.js"
 import sessionRoutes from "./routes/sessionRoutes.js"
+import resumeRouters from "./routes/resumeRoutes.js";
+import aiRouters from "./routes/aiRoutes.js";
+
 
 const app = express();
 
@@ -25,8 +27,15 @@ app.use("/api/inngest",serve({client:inngest,functions}))
 app.use("/api/chat",chatRoutes)
 app.use("/api/sessions",sessionRoutes)
 
+app.use('/api/resumes',resumeRouters)
+
+app.use('/api/ai',aiRouters)
+
 
 app.get("/health", (req, res) => {
+    res.status(200).json({ message: "API is up and running at health" });
+});
+app.get("/", (req, res) => {
     res.status(200).json({ message: "API is up and running" });
 });
 

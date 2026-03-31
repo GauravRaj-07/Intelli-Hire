@@ -1,5 +1,6 @@
 import { useUser } from '@clerk/clerk-react';
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
+import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
@@ -14,6 +15,24 @@ import ResumeDashboard from './pages/ResumeDashboard';
 function App() {
   
   const {isSignedIn,isLoaded}=useUser()
+
+  useEffect(() => {
+    if (isLoaded) {
+      if (isSignedIn) {
+        const isToastShown = sessionStorage.getItem('loginToastShown');
+        if (!isToastShown) {
+          toast.success("Successfully logged in");
+          sessionStorage.setItem('loginToastShown', 'true');
+        }
+      } else {
+        const wasSignedIn = sessionStorage.getItem('loginToastShown');
+        if (wasSignedIn) {
+          toast.success("Successfully logged out");
+          sessionStorage.removeItem('loginToastShown');
+        }
+      }
+    }
+  }, [isSignedIn, isLoaded]);
 
   // this will get rid of the flickring effect
   if(!isLoaded) return null
