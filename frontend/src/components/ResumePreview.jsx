@@ -41,6 +41,8 @@ const ResumePreview = ({data,template,accentColor,classes=""}) => {
             }
             #resume-preview, #resume-preview * {
                 visibility:visible;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             #resume-preview{
                 position:absolute;

@@ -4,6 +4,8 @@ import { dummyResumeData } from '../data/assets'
 import ResumePreview from '../components/ResumePreview'
 import Loader from '../components/Loader'
 import { ArrowLeftIcon } from 'lucide-react'
+import axiosInstance from '../lib/axios'
+import toast from 'react-hot-toast'
 
 const Preview = () => {
 
@@ -14,9 +16,17 @@ const Preview = () => {
   const [resumeData,setResumeData]=useState(null)
 
   const loadResume=async()=>{
-    setResumeData(dummyResumeData.find(resume=>resume._id===resumeId || null))
-    setIsLoading(false)
+    // setResumeData(dummyResumeData.find(resume=>resume._id===resumeId || null))
+    // setIsLoading(false)
 
+    try {
+      const {data}=await axiosInstance.get('/resumes/public/'+resumeId)
+      setResumeData(data.resume)
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message)
+    } finally {
+      setIsLoading(false)
+    } 
   }
 
   useEffect(()=>{
@@ -26,7 +36,7 @@ const Preview = () => {
   return resumeData ? (
     <div className='bg-slate-100'>
       <div className='max-w-3xl mx-auto py-10'>
-        <ResumePreview data={resumeData} template={resumeData.template} accentColor={resumeData.accent_color} classes='py-4 bg-white'/>
+        <ResumePreview data={resumeData} template={resumeData.templateId} accentColor={resumeData.accent_color} classes='py-4 bg-white'/>
       </div>
     </div>
   ) : (

@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="#2FC2A3"></rect>
+
+  <!-- Sparkle -->
+  <path d="
+    M64 28
+    Q68 56 100 64
+    Q68 72 64 100
+    Q60 72 28 64
+    Q60 56 64 28
+    Z" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
