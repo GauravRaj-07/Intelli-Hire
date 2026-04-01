@@ -4,6 +4,8 @@ const LANGUAGE_IDS = {
   javascript: 63,
   python: 71,
   java: 62,
+  c: 50,
+  cpp: 54,
 };
 
 /**
@@ -24,15 +26,18 @@ export const executeCode = async (language, code) => {
       };
     }
 
+    // Base64 encode source code to avoid issues with special characters (e.g. < > in C/C++)
+    const encodedCode = btoa(unescape(encodeURIComponent(code)));
+
     const response = await fetch(
-      "https://ce.judge0.com/submissions?base64_encoded=false&wait=true",
+      "https://ce.judge0.com/submissions?base64_encoded=true&wait=true",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          source_code: code,
+          source_code: encodedCode,
           language_id,
           stdin: "",
         }),
@@ -48,8 +53,15 @@ export const executeCode = async (language, code) => {
 
     const result = await response.json();
 
-    const stdout = (result.stdout || "").trim();
-    const stderr = (result.stderr || result.compile_output || "").trim();
+    // Decode base64 response fields
+    const decodeB64 = (str) => {
+      if (!str) return "";
+      try { return decodeURIComponent(escape(atob(str))); }
+      catch { return atob(str); }
+    };
+
+    const stdout = decodeB64(result.stdout).trim();
+    const stderr = decodeB64(result.stderr || result.compile_output).trim();
 
     if (stderr) {
       return {

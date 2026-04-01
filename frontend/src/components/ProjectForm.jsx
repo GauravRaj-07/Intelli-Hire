@@ -1,7 +1,24 @@
-import { Plus, Trash2 } from 'lucide-react'
-import React from 'react'
+import { Plus, Trash2, Loader2, Sparkles } from 'lucide-react'
+import React, { useState } from 'react'
+import axiosInstance from '../lib/axios'
+import toast from 'react-hot-toast'
 
 const ProjectForm = ({ data, onChange }) => {
+
+    const [generatingIndex, setGeneratingIndex] = useState(-1)
+
+    const generateDescription = async (index) => {
+        try {
+            setGeneratingIndex(index)
+            const prompt = `enhance this project description "${data[index].description}" for the project "${data[index].name}" of type "${data[index].type}"`
+            const response = await axiosInstance.post('/ai/enhance-project-desc', { userContent: prompt })
+            updateProject(index, "description", response.data.enhancedContent)
+        } catch (error) {
+            toast.error(error?.response?.data?.message || error.message)
+        } finally {
+            setGeneratingIndex(-1)
+        }
+    }
 
     const addProject = () => {
         const newProject = {
@@ -56,6 +73,13 @@ const ProjectForm = ({ data, onChange }) => {
                         </div>
 
                         <div className='space-y-2 mt-2'>
+                            <div className='flex items-center justify-between'>
+                                <label className='text-sm font-medium text-gray-700'>Project Description</label>
+                                <button disabled={generatingIndex===index || !project.name} onClick={()=>generateDescription(index)} className='flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50'>
+                                    {generatingIndex===index ? (<Loader2 className='size-4 animate-spin'/>) : (<Sparkles className='w-3 h-3'/>)}
+                                    {generatingIndex===index ? "Enhancing..." : "AI Enhance"}
+                                </button>
+                            </div>
                             <textarea rows={4} value={project.description || ""} onChange={(e) => updateProject(index, "description", e.target.value)} placeholder='Describe your project...' className='w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors text-sm text-black resize-none' />
                         </div>
 

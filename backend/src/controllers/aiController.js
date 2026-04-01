@@ -48,6 +48,29 @@ export const enhanceProfessionalSummary=async(req,res)=>{
     }
 }
 
+// controller for enhancing a resume's project description
+// POST: /api/ai/enhance-project-desc
+export const enhanceProjectDescription=async(req,res)=>{
+    try {
+        const {userContent}=req.body
+
+        if(!userContent) return res.status(400).json({message:'Missing required fields'})
+
+        const response=await ai.chat.completions.create({
+            model:ENV.OPENAI_MODEL,
+            messages:[
+                {role:"system",content:"You are an expert in resume writing. Your task is to enhance the project description of a resume. The description should be concise, highlighting key technologies used, your specific contributions, and the project's impact or results. Use action verbs and quantifiable results where possible. Make it ATS-friendly. and only return text no options or anything else."},
+                {role:"user",content:userContent}
+            ]
+        })
+
+        const enhancedContent=response.choices[0].message.content
+        return res.status(200).json({enhancedContent})
+    } catch (error) {
+        return res.status(400).json({message:error.message})
+    }
+}
+
 // controller for uploading a resume to the database
 // POST: /api/ai/uplaod-resume
 export const uploadResume=async(req,res)=>{
