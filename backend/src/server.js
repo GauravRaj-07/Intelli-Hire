@@ -17,10 +17,34 @@ const app = express();
 // middleware
 app.use(express.json());
 // credentials: true means =>server allows a browser to include cookies on request
-app.use(cors({
-    origin: ENV.CLIENT_URL,
-    credentials: true
-}));
+const exactAllowedOrigins = [
+    ENV.CLIENT_URL,
+    // common local dev origins
+    "http://localhost:5173",
+    "http://localhost:3000",
+].filter(Boolean);
+
+// Allow Vercel preview deployments for this frontend project.
+// Examples:
+// - https://intelli-hire-frontend.vercel.app
+// - https://intelli-hire-frontend-<hash>-gaurav-rajs-projects-<id>.vercel.app
+const vercelFrontendOriginRegex = /^https:\/\/intelli-hire-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i;
+
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            // Non-browser clients (curl, server-to-server) may not send Origin.
+            if (!origin) return callback(null, true);
+
+            if (exactAllowedOrigins.includes(origin)) return callback(null, true);
+            if (vercelFrontendOriginRegex.test(origin)) return callback(null, true);
+
+            // Disallow by omitting CORS headers (browser will block).
+            return callback(null, false);
+        },
+        credentials: true,
+    })
+);
 app.use(clerkMiddleware()) // this adds auth field to request object: req.auth()
 
 app.use("/api/inngest",serve({client:inngest,functions}))
